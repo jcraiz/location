@@ -35,20 +35,21 @@ function sendLocationData(latitude, longitude) {
     latitude: latitude,
     longitude: longitude
   };
+
+  const options = {
+    'method': 'post',
+    'contentType': 'application/json',
+    'payload': JSON.stringify(data)
+  };
+
+  const response = UrlFetchApp.fetch(scriptURL, options);
   
-  fetch(scriptURL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  }).then(response => {
+  if (response.getResponseCode() === 200) {
     console.log('Location data sent to Google Sheets');
-  }).catch(error => {
-    console.error('Error:', error);
-  });
+  } else {
+    console.error('Error sending data:', response.getContentText());
+  }
 }
-</script>
 
 </body>
 </html>
