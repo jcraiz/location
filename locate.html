@@ -31,18 +31,9 @@ function showPosition(position) {
 }
 
 function sendLocationData(latitude, longitude) {
-  const data = {
-    latitude: latitude,
-    longitude: longitude
-  };
-
-  const options = {
-    'method': 'post',
-    'contentType': 'application/json',
-    'payload': JSON.stringify(data)
-  };
-
-  const response = UrlFetchApp.fetch(scriptURL, options);
+  const url = `${scriptURL}?latitude=${latitude}&longitude=${longitude}`;
+  
+  const response = UrlFetchApp.fetch(url);
   
   if (response.getResponseCode() === 200) {
     console.log('Location data sent to Google Sheets');
