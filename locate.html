@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>HTML Geolocation</h1>
+<p>Click the button to get your coordinates.</p>
+
+<button onclick="getLocation()">Try It</button>
+
+<p id="demo"></p>
+
+<script>
+const x = document.getElementById("demo");
+const scriptURL = 'https://script.google.com/macros/s/AKfycbxHLSBL0egZ0_CCoNJcLi-tICYNt8oHSsJQhiC3jjrGk4EpaJ-UizDU0snkYqqBnGLDpA/exec'; // Replace with your Google Script URL
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+
+function showPosition(position) {
+  const latitude = position.coords.latitude;
+  const longitude = position.coords.longitude;
+  
+  x.innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
+  
+  // Send the data to Google Sheets
+  sendLocationData(latitude, longitude);
+}
+
+function sendLocationData(latitude, longitude) {
+  const data = {
+    latitude: latitude,
+    longitude: longitude
+  };
+  
+  fetch(scriptURL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }).then(response => {
+    console.log('Location data sent to Google Sheets');
+  }).catch(error => {
+    console.error('Error:', error);
+  });
+}
+</script>
+
+</body>
+</html>
